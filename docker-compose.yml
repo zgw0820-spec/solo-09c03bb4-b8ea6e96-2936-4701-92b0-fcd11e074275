@@ -24,6 +24,12 @@ services:
     environment:
       DATABASE_DSN: postgresql://fault_ro:fault_ro@db:5432/faultdb
       POOL_SIZE: "2"
+      # How long to wait for PQcancel acknowledgement before the backend is
+      # considered still busy and discarded.  Keep below any upstream proxy
+      # response timeout.
+      CANCEL_GRACE_S: "3.0"
+      # Time allowed for in-flight cancellation cleanups during shutdown.
+      SHUTDOWN_DRAIN_S: "5.0"
     ports:
       - "8000:8000"
 

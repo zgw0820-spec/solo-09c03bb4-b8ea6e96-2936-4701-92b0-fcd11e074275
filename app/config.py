@@ -38,6 +38,15 @@ class Settings:
     # slightly beyond the request deadline so application-side cancellation
     # is the primary mechanism and the backstop fires only if that fails.
     statement_timeout_grace_ms: int = _int("STATEMENT_TIMEOUT_GRACE_MS", 1250)
+    # How long to wait for the server to acknowledge PQcancel before the
+    # connection is considered still busy and is discarded.  Must stay
+    # comfortably inside an upstream proxy's response timeout.
+    cancel_grace_s: float = _float("CANCEL_GRACE_S", 3.0)
+    # Extra time granted to a statement task after its connection was closed,
+    # so it unwinds instead of lingering.
+    cancel_unwind_grace_s: float = _float("CANCEL_UNWIND_GRACE_S", 1.0)
+    # Time allowed for in-flight cancellation cleanups at shutdown.
+    shutdown_drain_s: float = _float("SHUTDOWN_DRAIN_S", 5.0)
     # Hard cap on the request body so an analyst cannot submit huge payloads.
     max_sql_chars: int = _int("MAX_SQL_CHARS", 10_000)
 
